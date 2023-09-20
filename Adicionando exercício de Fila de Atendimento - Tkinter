@@ -1,0 +1,82 @@
+import os
+import tkinter as tk
+from tkinter import messagebox
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+filaAtendimento = []
+
+def registrar_paciente():
+    paciente = input_nome.get()
+    registro = input_registro.get()
+    filaAtendimento.append((paciente, registro))
+    messagebox.showinfo("Paciente Registrado", f"{paciente} foi adicionado à fila.")
+
+def chamar_proximo_cliente():
+    global filaAtendimento
+    if filaAtendimento:
+        proximoPaciente = filaAtendimento.pop(0)
+        messagebox.showinfo("Próximo Paciente", f"'{proximoPaciente[0]}' foi chamado.")
+    else:
+        messagebox.showwarning("Fila Vazia", "A fila está vazia. Não há paciente para chamar.") 
+
+def pacientes_em_espera():
+    global filaAtendimento
+    if filaAtendimento:
+        pacientes = [paciente[0] for paciente in filaAtendimento]
+        messagebox.showinfo("Pacientes em Espera", "Pacientes em espera: " + ', '.join(pacientes))
+    else:
+        messagebox.showinfo("Fila Vazia", "A fila está vazia. Não há pacientes em espera.")
+
+def total_de_pacientes():
+    global filaAtendimento
+    total = len(filaAtendimento)
+    pacientes = [paciente[0] for paciente in filaAtendimento]
+    messagebox.showinfo("Total de Pacientes na Fila", f"Total de pacientes na fila: {total}\nPacientes: {', '.join(pacientes)}")
+
+def buscar_paciente_pelo_nome():
+    nomePaciente = input_buscar_nome.get().lower()
+    buscar = [paciente[0] for paciente in filaAtendimento if nomePaciente in paciente[0].lower()]
+    if buscar:
+        messagebox.showinfo("Pacientes Encontrados", "Pacientes encontrados: " + ', '.join(buscar))
+    else:
+        messagebox.showinfo("Nenhum Paciente Encontrado", "Não há nenhum paciente com o nome informado.")
+
+def create_interface():
+    window = tk.Tk()
+    window.title("Gerenciamento da Fila de Atendimento")
+
+    label_nome = tk.Label(window, text="Nome do paciente:")
+    label_registro = tk.Label(window, text="Número de registro:")
+    label_buscar_nome = tk.Label(window, text="Buscar paciente pelo nome:")
+
+    global input_nome, input_registro, input_buscar_nome
+    input_nome = tk.Entry(window)
+    input_registro = tk.Entry(window)
+    input_buscar_nome = tk.Entry(window)
+
+    button_registrar_paciente = tk.Button(window, text="Registrar Paciente", command=registrar_paciente)
+    button_chamar_proximo_cliente = tk.Button(window, text="Chamar Próximo Cliente", command=chamar_proximo_cliente)
+    button_pacientes_em_espera = tk.Button(window, text="Pacientes em Espera", command=pacientes_em_espera)
+    button_total_de_pacientes = tk.Button(window, text="Total de Pacientes", command=total_de_pacientes)
+    button_buscar_paciente_pelo_nome = tk.Button(window, text="Buscar Paciente pelo Nome", command=buscar_paciente_pelo_nome)
+
+    label_nome.grid(row=0, column=0)
+    input_nome.grid(row=0, column=1)
+    label_registro.grid(row=1, column=0)
+    input_registro.grid(row=1, column=1)
+
+    button_registrar_paciente.grid(row=0, column=2)
+    button_chamar_proximo_cliente.grid(row=1, column=2)
+    button_pacientes_em_espera.grid(row=2, column=0)
+    button_total_de_pacientes.grid(row=2, column=1)
+
+    label_buscar_nome.grid(row=3, column=0)
+    input_buscar_nome.grid(row=3, column=1)
+    button_buscar_paciente_pelo_nome.grid(row=3, column=2)
+
+    window.mainloop()
+
+if __name__ == "__main__":
+    create_interface()
