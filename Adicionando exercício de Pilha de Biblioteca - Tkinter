@@ -1,0 +1,138 @@
+import os
+import tkinter as tk
+from tkinter import messagebox
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+pilhas_genero = {}
+
+def nova_pilha():
+    genero = input_genero.get()
+
+    global pilhas_genero
+    pilhas_genero[genero] = []
+
+    messagebox.showinfo("Pilha Criada", f"A pilha de '{genero}' foi criada.")
+
+def adicionar_livro():
+    genero = input_genero.get()
+
+    global pilhas_genero
+    if validar_genero(genero):
+        titulo = input_titulo.get()
+        autor = input_autor.get()
+        
+        pilha = pilhas_genero[genero]
+        livro = {"titulo": titulo, "autor": autor}
+        pilha.append(livro)
+        
+        messagebox.showinfo("Livro Adicionado", f"'{titulo}' foi adicionado à pilha de '{genero}'.")
+
+def remover_livro():
+    genero_remover = input_genero_remover.get()
+
+    global pilhas_genero
+    if validar_genero(genero_remover):
+        genero_mover = input_genero_mover.get()
+        
+        if validar_genero(genero_mover):
+            pilha_remover = pilhas_genero[genero_remover]
+            pilha_mover = pilhas_genero[genero_mover]
+            
+            if pilha_remover:
+                livro_removido = pilha_remover.pop()
+                pilha_mover.append(livro_removido)
+                
+                messagebox.showinfo("Livro Removido", f"'{livro_removido['titulo']}' foi removido da pilha de '{genero_remover}'.")
+                messagebox.showinfo("Livro Movido", f"'{livro_removido['titulo']}' foi movido para a pilha de '{genero_mover}'.")
+            else:
+                messagebox.showwarning("Pilha Vazia", f"A pilha de '{genero_remover}' está vazia. Não há livros para remover.")
+
+def validar_genero(nome_genero):
+    global pilhas_genero
+    if nome_genero in pilhas_genero:
+        return True
+    else:
+        messagebox.showerror("Erro de Validação", f"A pilha para o gênero '{nome_genero}' não existe. Crie uma nova pilha primeiro.")
+        return False
+
+def ver_livro_do_topo():
+    genero = input_genero.get()
+
+    global pilhas_genero
+    if validar_genero(genero):
+        pilha = pilhas_genero[genero]
+        
+        if pilha:
+            livro_topo = pilha[-1]
+            messagebox.showinfo("Livro no Topo", f"O livro no topo da pilha de '{genero}' é: {livro_topo['titulo']} - {livro_topo['autor']}")
+        else:
+            messagebox.showwarning("Pilha Vazia", f"A pilha de '{genero}' está vazia. Não há livros para mostrar no topo.")
+
+def total_de_livros():
+    genero = input_genero.get()
+
+    global pilhas_genero
+    if validar_genero(genero):
+        pilha = pilhas_genero[genero]
+        messagebox.showinfo("Total de Livros", f"Total de livros em '{genero}': {len(pilha)}")
+
+def listar_generos_disponiveis():
+    global pilhas_genero
+    if pilhas_genero:
+        generos = list(pilhas_genero.keys())
+        messagebox.showinfo("Gêneros Disponíveis", "Gêneros disponíveis: " + ', '.join(generos))
+    else:
+        messagebox.showinfo("Nenhum Gênero Disponível", "Não há gêneros disponíveis.")
+
+def create_interface():
+    window = tk.Tk()
+    window.title("Gerenciamento de Livros")
+
+    label_genero = tk.Label(window, text="Gênero literário:")
+    label_titulo = tk.Label(window, text="Título do livro:")
+    label_autor = tk.Label(window, text="Autor do livro:")
+    label_genero_remover = tk.Label(window, text="Gênero da pilha a remover:")
+    label_genero_mover = tk.Label(window, text="Gênero da pilha a mover:")
+
+    global input_genero, input_titulo, input_autor, input_genero_remover, input_genero_mover
+    input_genero = tk.Entry(window)
+    input_titulo = tk.Entry(window)
+    input_autor = tk.Entry(window)
+    input_genero_remover = tk.Entry(window)
+    input_genero_mover = tk.Entry(window)
+
+    button_nova_pilha = tk.Button(window, text="Criar Nova Pilha", command=nova_pilha)
+    button_adicionar_livro = tk.Button(window, text="Adicionar Livro", command=adicionar_livro)
+    button_remover_livro = tk.Button(window, text="Remover Livro", command=remover_livro)
+    button_ver_livro_do_topo = tk.Button(window, text="Ver Livro do Topo", command=ver_livro_do_topo)
+    button_total_de_livros = tk.Button(window, text="Total de Livros", command=total_de_livros)
+    button_listar_generos = tk.Button(window, text="Listar Gêneros Disponíveis", command=listar_generos_disponiveis)
+
+    label_genero.grid(row=0, column=0)
+    input_genero.grid(row=0, column=1)
+    button_nova_pilha.grid(row=0, column=2)
+
+    label_titulo.grid(row=1, column=0)
+    input_titulo.grid(row=1, column=1)
+
+    label_autor.grid(row=2, column=0)
+    input_autor.grid(row=2, column=1)
+
+    label_genero_remover.grid(row=3, column=0)
+    input_genero_remover.grid(row=3, column=1)
+
+    label_genero_mover.grid(row=4, column=0)
+    input_genero_mover.grid(row=4, column=1)
+
+    button_adicionar_livro.grid(row=1, column=2)
+    button_remover_livro.grid(row=2, column=2)
+    button_ver_livro_do_topo.grid(row=3, column=2)
+    button_total_de_livros.grid(row=4, column=2)
+    button_listar_generos.grid(row=5, column=1)
+
+    window.mainloop()
+
+if __name__ == "__main__":
+    create_interface()
