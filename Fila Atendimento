@@ -1,0 +1,51 @@
+import os
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+filaAtendimento = []
+
+while (True):
+
+    print("Fila de espera: ")
+    print("--------------------------------------")
+    print("1. Registrar paciente à fila")
+    print("2. Chamar próximo cliente")
+    print("3. Pacientes em espera")
+    print("4. Mostrar o total de pacientes na fila")
+    print("5. Buscar um paciente pelo nome")
+    print("--------------------------------------")
+
+    opcao = input("Escolha uma opção (1-5): ")
+    print("--------------------------------------")
+
+    if opcao == "1":
+        paciente = input("Informe o nome do paciente: ") 
+        registro = input("Informe o número de registro do paciente: ")
+        filaAtendimento.append(paciente)
+        print(f"{paciente} foi adicionado à fila.")
+    elif opcao == "2":
+        if filaAtendimento:
+            proximoPaciente = filaAtendimento.popleft()
+            print(f"'{proximoPaciente}' foi chamado.")
+        else:
+            print("A fila está vazia. Não há paciente para chamar.") 
+    elif opcao == "3":
+        if filaAtendimento:
+            print("Pacientes em espera:", filaAtendimento)
+        else:
+            print("A fila está vazia. Não há pacientes em espera.")
+    elif opcao == "4":
+        if filaAtendimento:
+            print(f"Total de pacientes na fila:{len(filaAtendimento)}{filaAtendimento}")
+        else:
+            print("A fila está vazia.")
+    elif opcao == "5":
+        nomePaciente = input("Digite o nome do paciente")
+        buscar = [paciente for paciente in filaAtendimento if nomePaciente.lower() in paciente.lower()]
+        if buscar:
+            print("Pacientes encontrados:", buscar)
+        else:
+            print("Não há nenhum paciente com o nome informado")
+    else:
+        print("Opção inválida. Por favor, escolha 1-5.")
