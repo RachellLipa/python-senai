@@ -1,0 +1,124 @@
+import os
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+pilhas_genero = {}
+
+def nova_pilha():
+    genero = input("Informe o gênero literário que deseja adicionar? ")
+
+    global pilhas_genero
+    pilhas_genero[genero] = []
+
+    print(f"A pilha de '{genero}' foi criada.")
+
+def adicionar_livro():
+    genero = input("Informe o gênero literário: ")
+
+    global pilhas_genero
+    if validar_genero(genero):
+        titulo = input("Informe o título do livro: ")
+        autor = input("Informe o nome do autor da obra: ")
+        
+        pilha = pilhas_genero[genero]
+        livro = {"titulo": titulo, "autor": autor}
+        pilha.append(livro)
+        
+        print(f"'{titulo}' foi adicionado à pilha de '{genero}'.")
+
+def remover_livro():
+    genero_remover = input("Informe o gênero literário da pilha que deseja remover: ")
+
+    global pilhas_genero
+    if validar_genero(genero_remover):
+        genero_mover = input("Informe o gênero da pilha que deseja mover: ")
+        
+        if validar_genero(genero_mover):
+            pilha_remover = pilhas_genero[genero_remover]
+            pilha_mover = pilhas_genero[genero_mover]
+            
+            if pilha_remover:
+                livro_removido = pilha_remover.pop()
+                pilha_mover.append(livro_removido)
+                
+                print(f"'{livro_removido['titulo']}' foi removido da pilha de '{genero_remover}'.")
+                print(f"'{livro_removido['titulo']}' foi movido para a pilha de '{genero_mover}'.")
+            else:
+                print(f"A pilha de '{genero_remover}' está vazia. Não há livros para remover.")
+
+def validar_genero(nome_genero):
+    global pilhas_genero
+    if nome_genero in pilhas_genero:
+        return True
+    else:
+        print(f"A pilha para o gênero '{nome_genero}' não existe. Crie uma nova pilha primeiro.")
+        print("Para isso, selecione a opção 5.")
+        return False
+
+def ver_livro_do_topo():
+    genero = input("Informe o gênero literário: ")
+
+    global pilhas_genero
+    if validar_genero(genero):
+        pilha = pilhas_genero[genero]
+        
+        if pilha:
+            livro_topo = pilha[-1]
+            
+            print(f"O livro no topo da pilha de '{genero}' é: {livro_topo['titulo']} - {livro_topo['autor']}")
+        else:
+            print(f"A pilha de '{genero}' está vazia. Não há livros para mostrar no topo.")
+
+def total_de_livros():
+    genero = input("Informe o gênero literário: ")
+
+    global pilhas_genero
+    if validar_genero(genero):
+        pilha = pilhas_genero[genero]
+        
+        print(f"Total de livros em '{genero}': {len(pilha)}")
+
+def listar_generos_disponiveis():
+    global pilhas_genero
+    if pilhas_genero:
+        generos = list(pilhas_genero.keys())
+        
+        print("Gêneros disponíveis:", generos)
+    else:
+        print(f"Não há gêneros disponíveis.")
+
+if __name__ == "__main__":
+    while True:
+        print("--------------------------------------")
+        print("Gerenciamento de Livros da Biblioteca:")
+        print("1. Adicionar livro a uma pilha")
+        print("2. Mover livro de uma pilha")
+        print("3. Ver livro do topo de uma pilha")
+        print("4. Mostrar o total de livros em uma pilha")
+        print("5. Criar uma nova pilha")
+        print("6. Listar todos os gêneros disponíveis")
+        print("7. Sair")
+        print("--------------------------------------")
+
+        opcao = input("Escolha uma opção (1-7): ")
+        print("--------------------------------------")
+
+        clear_screen()
+        
+        if opcao == "1":  
+            adicionar_livro()
+        elif opcao == "2":
+            remover_livro()
+        elif opcao == "3":
+            ver_livro_do_topo()
+        elif opcao == "4":
+            total_de_livros()
+        elif opcao == "5":
+            nova_pilha()
+        elif opcao == "6":
+            listar_generos_disponiveis()
+        elif opcao == "7":
+            break
+        else:
+            print("Opção inválida. Por favor, escolha uma opção válida (1-7)")
