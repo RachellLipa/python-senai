@@ -1,0 +1,110 @@
+import os
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+ultimoId = 0
+inventario = {}
+
+def adicionarProduto():
+    global ultimoId
+    ultimoId = ultimoId + 1
+    id = ultimoId
+
+    if id not in inventario:
+        nome = input("Digite o nome do produto: ")
+        preco = float(input("Digite o preço do produto: "))
+        quantidade = int(input("Digite a quantidade do produto: "))
+        categoria = input("Digite a categoria do produto: ")
+
+        inventario[id] = {"id": id, "nome": nome, "preco": preco, "quantidade": quantidade, "categoria": categoria}
+        print(f"Produto com ID {id} foi adicionado com sucesso.")
+
+def removerProduto():
+    id = input("Digite o ID do produto que deseja remover: ")
+
+    if id in inventario:
+        del inventario[id]
+        print(f"Produto com ID {id} foi removido com sucesso.")
+    else:
+        print(f"Produto com ID {id} não foi encontrado no inventário.")
+
+def editarProduto():
+    id = input("Digite o ID do produto que deseja editar: ")
+
+    if id in inventario:
+        produto = inventario[id]
+        print(produto)
+
+        if input("Desejar editar o nome (s/n)? ") == "s":
+            inventario[id]["nome"] = input("Digite o nome do produto: ")
+
+        if input("Desejar editar o preço(s/n)? ") == "s":
+            inventario[id]["preco"] = float(input("Digite o preço do produto: "))
+        
+        if input("Desejar editar a quantidade (s/n)? ") == "s":
+            inventario[id]["quantidade"] = int(input("Digite a quantidade do produto: "))
+
+        if input("Desejar editar a categoria (s/n)? ") == "s":
+            inventario[id]["categoria"] = input("Digite a categoria do produto: ")
+
+        print(f"Produto '{id}' atualizado com sucesso.")
+    else:
+        print(f"Produto '{id}' não encontrado no dicionário.")
+
+def listarPodutoPorCategoria():
+    categoria = input("Digite a categoria do produto que deseja listar: ")
+
+    for id, produto in inventario.items():
+        if(produto["categoria"] == categoria):
+            print(produto)
+
+def calcularProdutos():
+    valor_total = 0
+
+    for id, produto in inventario.items():
+        preco = produto["preco"]
+        quantidade = produto["quantidade"]
+        valor_total = valor_total + preco*quantidade
+
+    print(f"Valor total do estoque: R$ ", valor_total)
+
+def limiteProduto():
+    limite_quantidade = input("Informe o limite de quantidade que deseja verificar: ")
+
+    for id, produto in inventario.items():
+        quantidade = produto["quantidade"]
+        if quantidade < limite_quantidade:
+            print(f"O produto de ID {id} está abaixo do limite informado")
+
+if __name__ == "__main__":
+    while True:
+        print("---------------------------------------------------------------------")
+        print("Gerenciador de Inventário de Produtos:")
+        print("1. Adicionar um produto ao inventário")
+        print("2. Remover um produto do inventário")
+        print("3. Atualizar informações de um produto")
+        print("4. Listar todos os produtos de uma categoria")
+        print("5. Calcular o valor total em estoque")
+        print("6. Encontrar produtos com quantidade abaixo de um determinado limite")
+        print("---------------------------------------------------------------------")
+
+        opcao = input("Escolha uma opção (1-6): ")
+        print("---------------------------------------------------------------------")
+        
+        if opcao == "1":  
+            adicionarProduto()
+        elif opcao == "2":
+            removerProduto()
+        elif opcao == "3":
+            editarProduto()
+        elif opcao == "4":
+            listarPodutoPorCategoria()
+        elif opcao == "5":
+            calcularProdutos()
+        elif opcao == "6":
+            limiteProduto()
+        elif opcao == "7":
+            break
+        else:
+            print("Opção inválida. Por favor, escolha uma opção válida (1-6)")
